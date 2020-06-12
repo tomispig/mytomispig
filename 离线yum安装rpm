@@ -1,0 +1,48 @@
+使用YUM CACHE制作本地repo
+https://blog.csdn.net/lpwmm/article/details/82875682
+
+
+【yum】解决离线安装依赖包的方法（也介绍了怎么自己创建一个本地yum源）
+https://www.jianshu.com/p/7fbad7713081?utm_campaign
+
+
+yum 下载全量依赖 rpm 包及离线安装
+https://blog.csdn.net/jlh21/article/details/104775084/
+1.查看依赖包
+可以使用“yum deplist”命令来查找 rpm 包的依赖列表。例如，要查找“ansible”rpm的依赖包
+
+2.解决方案
+方案一（推荐）：repotrack
+# 安装yum-utils
+$ yum -y install yum-utils
+
+# 下载 ansible 全量依赖包
+$ repotrack ansible
+
+
+方案二：yumdownloader
+# 安装yum-utils
+$ yum -y install yum-utils
+
+# 下载 ansible 依赖包
+$ yumdownloader --resolve --destdir=/tmp ansible
+参数说明：
+–destdir：指定 rpm 包下载目录（不指定时，默认为当前目录）
+–resolve：下载依赖的 rpm 包。
+注意
+仅会将主软件包和基于你现在的操作系统所缺少的依赖关系包一并下载。
+
+
+方案三：yum 的 downloadonly 插件
+# 安装插件
+$ yum -y install yum-download
+
+# 下载 ansible 依赖包
+$ yum -y install ansible --downloadonly --downloaddir=/tmp
+注意
+与 yumdownloader 命令一样，也是仅会将主软件包和基于你现在的操作系统所缺少的依赖关系包一并下载。
+
+
+离线安装 rpm
+# 离线安装
+$ rpm -Uvh --force --nodeps *.rpm
